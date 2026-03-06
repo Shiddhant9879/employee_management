@@ -1,4 +1,4 @@
-package com.employeemanagement.employee_management.Service;
+package com.employeemanagement.employee_management.service;
 
 import java.time.LocalDate;
 import org.springframework.stereotype.Service;
