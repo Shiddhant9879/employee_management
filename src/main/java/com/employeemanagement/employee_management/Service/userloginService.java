@@ -1,29 +1,36 @@
 package com.employeemanagement.employee_management.service;
 
-import org.springframework.stereotype.Service;
-
+import com.employeemanagement.employee_management.Repository.employeeRepository;
+import com.employeemanagement.employee_management.model.Employee;
 import com.employeemanagement.employee_management.Dto.Logindto;
-import com.employeemanagement.employee_management.Dto.Loginresponsedto;
+
+import org.echocat.jomon.demo.repository.EmployeeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 
 public class userloginService {
 
-    public void Login(Logindto request) {
+    @Autowired
 
-        if (request == null || request.getemail() == null || request.getpassword() == null) {
+    private EmployeeRepository repo;
 
-            throw new IllegalArgumentException("Invalid login request");
+    // edge case 1: null values
+
+    public void barriercheck(Logindto request) {
+
+        if (request == null || request.getemail() == null || request.getpassword() == null ||
+                request.getemail().isBlank() || request.getpassword().isBlank()) {
+
+            throw new IllegalArgumentException("feilds cannt be null");
+
         }
 
-        String storedemail = "sidryanite@gmail.com";
-        String storedpassword = "123456";
+        // case 2: logic now to verify if the email and password exist or not
 
-        if (!storedpassword.equals(request.getpassword()) || !storedemail.equals(request.getemail())) {
+        Employee user = repo.findByEmail(request.getEmail());
 
-            throw new IllegalArgumentException("Invalid email or password");
-
-        }
     }
 
 }
