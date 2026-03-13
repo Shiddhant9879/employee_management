@@ -1,10 +1,19 @@
 package com.employeemanagement.employee_management.service;
 
-import java.time.LocalDate;
+import com.employeemanagement.employee_management.Repository.RoleAssignmentRepository;
+import com.employeemanagement.employee_management.model.RoleAssignment;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class RoleValidationService {
+
+  @Autowired
+  private RoleAssignmentRepository roleRepo;
 
   public void validateRole(Long employeeId, String requiredRole) {
 
@@ -17,38 +26,38 @@ public class RoleValidationService {
       throw new IllegalArgumentException("Required role cannot be null or empty");
     }
 
-    // 2️⃣ Temporary simulation of role assignment
-    String assignedRole = "ADMIN";
-    boolean isActive = true;
-    LocalDate startDate = LocalDate.of(2024, 1, 1);
-    LocalDate endDate = null; // ongoing role
+    // 2️⃣ Fetch roles from repository
+    List<RoleAssignment> roles = roleRepo.findByEmployeeId(employeeId);
+
+    if (roles.isEmpty()) {
+      throw new IllegalStateException("Employee has no role assigned");
+    }
 
     LocalDate today = LocalDate.now();
 
-    // 3️⃣ Role existence check
-    if (!assignedRole.equalsIgnoreCase(requiredRole)) {
-      throw new IllegalStateException(
-          "Employee does not have required role: " + requiredRole);
+    // 3️⃣ Validate each role
+    for (RoleAssignment role : roles) {
+
+      if (!role.getRoleName().equalsIgnoreCase(requiredRole)) {
+        continue;
+      }
+
+      if (!role.getIsActive()) {
+        continue;
+      }
+
+      if (role.getStartDate() != null && today.isBefore(role.getStartDate())) {
+        continue;
+      }
+
+      if (role.getEndDate() != null && today.isAfter(role.getEndDate())) {
+        continue;
+      }
+
+      // If all checks pass → role is valid
+      return;
     }
 
-    // 4️⃣ Active flag check
-    if (!isActive) {
-      throw new IllegalStateException("Role assignment is not active");
-    }
-
-    // 5️⃣ Time window validation
-    if (startDate == null) {
-      throw new IllegalStateException("Start date cannot be null");
-    }
-
-    if (today.isBefore(startDate)) {
-      throw new IllegalStateException("Role not yet active");
-    }
-
-    if (endDate != null && today.isAfter(endDate)) {
-      throw new IllegalStateException("Role assignment expired");
-    }
-
-    System.out.println("Role validation successful for employee ID " + employeeId);
+    throw new IllegalStateException("Employee does not have a valid role: " + requiredRole);
   }
 }
