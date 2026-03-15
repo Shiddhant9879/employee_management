@@ -1,19 +1,27 @@
-package com.employeemanagement.employee_management.service;
+package com.employeemanagement.employee_management.Service;
 
-import org.springframework.stereotype.*;
+import com.employeemanagement.employee_management.Repository.employeeRepository;
+import com.employeemanagement.employee_management.model.Employee;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class IdentityValidationService {
 
-    public void validateemployeeIdentity(Long EmployeeId) {
+    @Autowired
+    private employeeRepository employeeRepository;
 
-        if (EmployeeId == null) {
+    public Employee validateEmployee(String email) {
 
-            throw new IllegalArgumentException("Employee Id cannot be null");
+        Optional<Employee> employeeOptional = employeeRepository.findByEmail(email);
 
+        if (employeeOptional.isEmpty()) {
+            throw new RuntimeException("Employee does not exist");
         }
 
-        System.out.println("Employee Id is valid:" + EmployeeId);
+        return employeeOptional.get();
     }
-
 }
