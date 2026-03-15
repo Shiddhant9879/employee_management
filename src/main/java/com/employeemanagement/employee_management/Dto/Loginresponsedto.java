@@ -3,7 +3,7 @@ package com.employeemanagement.employee_management.Dto;
 public class Loginresponsedto {
 
       private String Accesstoken;
-      private String employeeId;
+      private Long employeeId;
       private String role;
 
       public void setAccesstoken(String Accesstoken) {
@@ -12,7 +12,7 @@ public class Loginresponsedto {
 
       }
 
-      public void setemployeeId(String employeeId) {
+      public void setemployeeId(Long employeeId) {
 
             this.employeeId = employeeId;
       }
@@ -27,7 +27,7 @@ public class Loginresponsedto {
             return Accesstoken;
       }
 
-      public String getemployeeId() {
+      public Long getemployeeId() {
 
             return employeeId;
       }
