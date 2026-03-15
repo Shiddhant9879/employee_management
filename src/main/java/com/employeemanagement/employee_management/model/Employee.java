@@ -13,12 +13,12 @@ public class Employee {
 
     private String firstName;
     private String lastName;
-   
 
     @Column(unique = true)
     private String email;
     private String phoneNumber;
     private String employmentType;
+    private String password;
 
     private LocalDate dateOfJoining;
 
@@ -42,6 +42,12 @@ public class Employee {
 
     public String getPhoneNumber() {
         return phoneNumber;
+
+    }
+
+    public String getPassword() {
+
+        return password;
     }
 
     public String getEmploymentType() {
@@ -68,6 +74,11 @@ public class Employee {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setPassword(String password) {
+
+        this.password = password;
     }
 
     public void setPhoneNumber(String phoneNumber) {

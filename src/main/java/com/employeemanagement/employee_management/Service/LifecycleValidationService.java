@@ -1,4 +1,4 @@
-package com.employeemanagement.employee_management.service;
+package com.employeemanagement.employee_management.Service;
 
 import org.springframework.stereotype.Service;
 
