@@ -27,37 +27,42 @@ public class JwtFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 🔥 Step 1: Get Authorization header
-        String authHeader = request.getHeader("Authorization");
+        String path = request.getServletPath();
 
-        String token = null;
-        Long employeeId = null;
-
-        // 🔥 Step 2: Extract token
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-
-            // 🔥 Step 3: Validate token
-            if (jwtService.isValid(token)) {
-                employeeId = jwtService.extractEmployeeId(token);
-            }
+        // 🔥 PUBLIC APIs को bypass कर
+        if (path.contains("/auth") || path.contains("/test")) {
+            filterChain.doFilter(request, response);
+            return;
         }
 
-        // 🔥 Step 4: Set authentication in Spring Security
-        if (employeeId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        String authHeader = request.getHeader("Authorization");
+
+        // 🔥 2. If no token → just continue (DO NOT BLOCK)
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = authHeader.substring(7);
+
+        try {
+            Long employeeId = jwtService.extractEmployeeId(token);
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     employeeId,
                     null,
-                    Collections.emptyList() // roles later
-            );
+                    Collections.emptyList());
 
             authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
             SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        } catch (Exception e) {
+            // 🔥 Invalid token → DO NOT CRASH
+            System.out.println("JWT ERROR: " + e.getMessage());
         }
 
-        // 🔥 Step 5: Continue request
         filterChain.doFilter(request, response);
+
+        System.out.println("PATH: " + request.getServletPath());
     }
 }
