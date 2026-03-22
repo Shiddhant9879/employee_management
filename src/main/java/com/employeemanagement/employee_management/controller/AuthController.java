@@ -5,7 +5,10 @@ import com.employeemanagement.employee_management.Dto.Loginresponsedto;
 import com.employeemanagement.employee_management.model.Employee;
 import com.employeemanagement.employee_management.Service.userloginService;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +18,9 @@ public class AuthController {
 
     @Autowired
     private userloginService loginService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
 
@@ -29,4 +35,11 @@ public class AuthController {
 
         return response;
     }
+
+    @GetMapping("/test/hash")
+    public String getHash() {
+        System.out.println("🔥 CONTROLLER HIT");
+        return "working";
+    }
+
 }
