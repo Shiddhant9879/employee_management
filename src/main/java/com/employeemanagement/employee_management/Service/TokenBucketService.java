@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TokenBucketService {
 
     private final int MAX_TOKENS = 5;
-    private final int REFILL_RATE = 1; // tokens per second
+    private final int REFILL_RATE = 0; // tokens per second
 
     // 🔥 Stores buckets per user
     private final ConcurrentHashMap<String, TokenBucket> buckets = new ConcurrentHashMap<>();
