@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class TokenBucketService {
 
-    private final int MAX_TOKENS = 5;
+    private final int MAX_TOKENS = 2;
     private final int REFILL_RATE = 0; // tokens per second
 
     // 🔥 Stores buckets per user
