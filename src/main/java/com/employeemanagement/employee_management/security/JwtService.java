@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import java.security.Key;
 import java.util.Date;
 
+import javax.crypto.SecretKey;
+
 @Service
 public class JwtService {
 
@@ -51,10 +53,10 @@ public class JwtService {
 
     // 🔍 Internal method
     private Claims getClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
+        return Jwts.parser()
+                .verifyWith((SecretKey) key)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

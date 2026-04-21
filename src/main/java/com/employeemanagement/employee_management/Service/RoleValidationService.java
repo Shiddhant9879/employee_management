@@ -1,4 +1,4 @@
-package com.employeemanagement.employee_management.service;
+package com.employeemanagement.employee_management.Service;
 
 import com.employeemanagement.employee_management.Repository.RoleAssignmentRepository;
 import com.employeemanagement.employee_management.model.RoleAssignment;

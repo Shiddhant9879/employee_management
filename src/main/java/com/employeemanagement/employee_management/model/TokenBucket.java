@@ -2,46 +2,36 @@ package com.employeemanagement.employee_management.model;
 
 public class TokenBucket {
 
-    // variables
-
     private int token;
     private final int maxToken;
     private final int refillrate;
-    private long LastRefillTime;
-
-    // constructor
+    private long lastRefillTime;
 
     public TokenBucket(int maxToken, int refillrate) {
 
-        this.token = token;
         this.maxToken = maxToken;
         this.refillrate = refillrate;
-        this.LastRefillTime = System.currentTimeMillis();
+        this.token = maxToken; // 🔥 FIX: start full
+        this.lastRefillTime = System.currentTimeMillis();
     }
-
-    // Token refill based on time
 
     public void refill() {
 
         long now = System.currentTimeMillis();
-        long timePassed = (now - LastRefillTime) / 1000; // conversion logic
+        long timePassed = (now - lastRefillTime) / 1000;
 
         if (timePassed > 0) {
-
             int tokensToAdd = (int) (timePassed * refillrate);
-            token = Math.min(token + tokensToAdd, maxToken);
-            LastRefillTime = now;
+            token = Math.min(maxToken, token + tokensToAdd);
+            lastRefillTime = now;
         }
     }
-
-    // method to consume token
 
     public boolean consume() {
 
         refill();
 
         if (token > 0) {
-
             token--;
             return true;
         }
